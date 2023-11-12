@@ -3,7 +3,7 @@ import pandas as pd
 
 
 class TrendTransformer(BaseEstimator, TransformerMixin):
-    def __init__(self, window_size=10):
+    def __init__(self, window_size=5):
         self.window_size = window_size
 
     def fit(self, X: pd.DataFrame, y=None):

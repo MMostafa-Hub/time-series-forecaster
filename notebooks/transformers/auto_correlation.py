@@ -5,7 +5,7 @@ from statsmodels.tsa.stattools import pacf
 
 
 class AutocorrelationTransformer(BaseEstimator, TransformerMixin):
-    def __init__(self, max_n_lags=3, max_lag=10):
+    def __init__(self, max_n_lags=5, max_lag=10):
         if 10 < max_n_lags < 1:
             raise ValueError("max_lags should be between 1 and 10")
 
