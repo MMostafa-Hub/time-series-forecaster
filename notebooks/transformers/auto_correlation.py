@@ -5,13 +5,13 @@ from statsmodels.tsa.stattools import pacf
 
 
 class AutocorrelationTransformer(BaseEstimator, TransformerMixin):
-    def __init__(self, max_n_lags=3):
+    def __init__(self, max_n_lags=3, max_lag=10):
         if 10 < max_n_lags < 1:
             raise ValueError("max_lags should be between 1 and 10")
 
         self.significant_lags = None
         self.max_n_lags = max_n_lags
-        self.max_lag = None
+        self.max_lag = max_lag
 
     def fit(self, X: pd.DataFrame, y=None):
         X_copy = X.copy()
@@ -20,22 +20,12 @@ class AutocorrelationTransformer(BaseEstimator, TransformerMixin):
         # Calculate the PACF values
         pacf_values = pacf(
             value,
-            nlags=10,
-        )
-
-        # Sort the PACF values
-        top_pacf_values = list(
-            filter(
-                lambda pacf_value: abs(pacf_value) > 2 / len(value) ** 0.5, pacf_values
-            )
+            nlags=self.max_lag,
         )
 
         # Pick the top lags
-        significant_lags = np.argsort(abs(np.array(top_pacf_values)))[::-1]
+        significant_lags = np.argsort(abs(np.array(pacf_values)))[::-1]
         self.significant_lags = significant_lags[1 : self.max_n_lags + 1]
-
-        # Calculate the max lag
-        self.max_lag = max(self.significant_lags)
 
         return self
 
@@ -46,11 +36,11 @@ class AutocorrelationTransformer(BaseEstimator, TransformerMixin):
         # Excluding the first lag (autocorrelation = 1) and Lag 0 (constant)
         correlation_features = pd.DataFrame(
             index=X_copy.index,
-            columns=[f"lag_{i}" for i in range(1, self.max_lag)],
+            columns=[f"lag_{lag}" for lag in self.significant_lags],
         )
 
-        for i, lag in enumerate(self.significant_lags):
-            correlation_features.loc[:, f"lag_{i}"] = value.shift(lag)
+        for lag in self.significant_lags:
+            correlation_features.loc[:, f"lag_{lag}"] = value.shift(lag)
 
         # Backfill the NaN values
         correlation_features = correlation_features.bfill()
