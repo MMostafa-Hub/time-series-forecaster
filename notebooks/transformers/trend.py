@@ -1,8 +1,5 @@
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.linear_model import LinearRegression
 import pandas as pd
-import numpy as np
 
 
 class TrendTransformer(BaseEstimator, TransformerMixin):
@@ -12,7 +9,7 @@ class TrendTransformer(BaseEstimator, TransformerMixin):
     def fit(self, X: pd.DataFrame, y=None):
         return self
 
-    def transform(self, X: np.ndarray, y=None) -> pd.DataFrame:
+    def transform(self, X: pd.DataFrame, y=None) -> pd.DataFrame:
         X_copy = X.copy()
         values = X_copy["value"]
 
