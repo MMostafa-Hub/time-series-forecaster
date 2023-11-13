@@ -18,11 +18,21 @@ class Dataset(models.Model):
 
 class Forecast(models.Model):
     dataset_id = models.ForeignKey(Dataset, on_delete=models.CASCADE)
-    values = models.JSONField(name="values")
-    prediction = models.FloatField(null=True, name="prediction")
+    prediction = models.FloatField(null=True, name="prediction", blank=True)
 
     def __str__(self):
-        return f"Dataset ID: {self.dataset_id}, Values: {self.values}, Prediction: {self.prediction}"
+        return f"Dataset ID: {self.dataset_id}, Prediction: {self.prediction}"
+
+
+class Value(models.Model):
+    forecast = models.ForeignKey(
+        Forecast, on_delete=models.CASCADE, related_name="values"
+    )
+    time = models.DateTimeField()
+    value = models.FloatField()
+
+    def __str__(self):
+        return f"Forecast: {self.forecast}, Time: {self.time}, Value: {self.value}"
 
 
 class Pipeline(models.Model):

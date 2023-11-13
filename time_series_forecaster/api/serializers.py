@@ -1,10 +1,11 @@
 from rest_framework import serializers
-from .models import Forecast, Dataset
+from .models import Forecast, Value
 
 
-class ValueSerializer(serializers.Serializer):
-    time = serializers.DateTimeField()
-    value = serializers.FloatField()
+class ValueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Value
+        fields = ["value", "time"]
 
 
 class ForecastSerializer(serializers.ModelSerializer):
@@ -20,7 +21,6 @@ class ForecastSerializer(serializers.ModelSerializer):
         return attrs
 
     def validate_values(self, values):
-        print(type(values))
         if len(values) < 5:
             raise serializers.ValidationError("The minimum number of values is 5")
         return values
@@ -29,5 +29,5 @@ class ForecastSerializer(serializers.ModelSerializer):
         values_data = validated_data.pop("values")
         forecast = Forecast.objects.create(**validated_data)
         for value_data in values_data:
-            forecast.values.create(**value_data)
+            Value.objects.create(forecast=forecast, **value_data)
         return forecast
