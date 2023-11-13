@@ -16,17 +16,8 @@ class ForecastSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         super().validate(attrs)
-        self.validate_dataset_id(attrs.get("dataset_id"))
         self.validate_values(attrs.get("values"))
         return attrs
-
-    def validate_dataset_id(self, dataset_id):
-        try:
-            dataset = Dataset.objects.get(dataset_id=dataset_id)
-        except Dataset.DoesNotExist:
-            raise serializers.ValidationError("Invalid dataset_id")
-
-        return dataset_id
 
     def validate_values(self, values):
         print(type(values))
