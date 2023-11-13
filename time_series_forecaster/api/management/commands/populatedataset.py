@@ -16,7 +16,7 @@ class Command(BaseCommand):
         self.stdout.write(
             f"datasets: {len(datasets_names)}\nmodels: {len(models_paths)}"
         )
-        with open("../data/datasets_intervals.pkl") as file:
+        with open("../data/datasets_intervals.pkl", "rb") as file:
             intervals = pickle.load(file)
 
         for dataset_name, model_path in zip(datasets_names, models_paths):

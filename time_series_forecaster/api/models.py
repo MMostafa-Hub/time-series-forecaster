@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 
 
 class Dataset(models.Model):
@@ -7,7 +8,9 @@ class Dataset(models.Model):
     )
     model = models.BinaryField(name="model")
 
-    interval = models.DateTimeField(name="interval")
+    interval = models.DurationField(
+        name="interval", default=datetime.timedelta(days=1), null=False, blank=False
+    )
 
     def __str__(self):
         return f"Dataset ID: {self.dataset_id}"
