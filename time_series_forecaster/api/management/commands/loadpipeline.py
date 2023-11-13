@@ -12,4 +12,4 @@ class Command(BaseCommand):
         pipeline = Pipeline(preprocessing_pipeline=preprocessing_pipeline)
         pipeline.save()
 
-        self.stdout.write(self.style.SUCCESS("Loaded pipelines successfully"))
+        self.stdout.write(self.style.SUCCESS("Loaded preprocessing pipeline successfully"))
