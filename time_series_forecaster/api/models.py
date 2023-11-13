@@ -7,6 +7,8 @@ class Dataset(models.Model):
     )
     model = models.BinaryField(name="model")
 
+    interval = models.DateTimeField(name="interval")
+
     def __str__(self):
         return f"Dataset ID: {self.dataset_id}"
 

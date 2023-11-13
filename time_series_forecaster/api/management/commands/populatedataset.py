@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from api.models import Dataset
 from glob import glob
+import pickle
 
 
 class Command(BaseCommand):
@@ -15,10 +16,16 @@ class Command(BaseCommand):
         self.stdout.write(
             f"datasets: {len(datasets_names)}\nmodels: {len(models_paths)}"
         )
-        
+        with open("../data/datasets_intervals.pkl") as file:
+            intervals = pickle.load(file)
+
         for dataset_name, model_path in zip(datasets_names, models_paths):
             with open(model_path, "rb") as file:
-                dataset = Dataset(dataset_id=dataset_name, model=file.read())
+                dataset = Dataset(
+                    dataset_id=dataset_name,
+                    model=file.read(),
+                    interval=intervals[dataset_name],
+                )
             dataset.save()
 
     def handle(self, *args, **options):
