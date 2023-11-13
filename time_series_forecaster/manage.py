@@ -2,7 +2,12 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-
+from api.transformers.auto_correlation import AutocorrelationTransformer
+from api.transformers.seasonality import SeasonalityFeaturesTransformer
+from api.transformers.interpolation import InterpolationTransformer
+from api.transformers.outlier import OutlierTransformer
+from sklearn.linear_model import LinearRegression
+from api.transformers.trend import TrendTransformer
 
 def main():
     """Run administrative tasks."""
