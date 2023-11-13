@@ -1,5 +1,4 @@
 from django.contrib import admin
-from .models import Forecast, Dataset
+from .models import Forecast, Dataset, Pipeline, Value
 
-admin.site.register(Forecast)
-admin.site.register(Dataset)
+admin.site.register((Forecast, Dataset, Pipeline, Value))
