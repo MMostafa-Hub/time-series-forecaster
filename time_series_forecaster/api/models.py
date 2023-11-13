@@ -20,7 +20,7 @@ class Dataset(models.Model):
 
 
 class Forecast(models.Model):
-    dataset_id = models.CharField(max_length=255, foreign_key=True)
+    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
     values = models.JSONField()
     prediction = models.FloatField()
 
