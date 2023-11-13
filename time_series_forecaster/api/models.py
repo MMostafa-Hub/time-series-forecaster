@@ -13,11 +13,6 @@ class Dataset(models.Model):
 
         return pickle.loads(self.model)
 
-    def set_model(self, model):
-        import pickle
-
-        self.model = pickle.dumps(model)
-
 
 class Forecast(models.Model):
     dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
