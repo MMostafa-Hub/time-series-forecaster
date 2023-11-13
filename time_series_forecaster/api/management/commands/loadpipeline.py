@@ -6,6 +6,9 @@ class Command(BaseCommand):
     help = "Populate the Dataset model with initial data"
 
     def handle(self, *args, **options):
+        # Make sure the pipeline table has only one row
+        Pipeline.objects.all().delete()
+        
         with open("../notebooks/pipelines/preprocessing_pipeline.pkl", "rb") as file:
             preprocessing_pipeline = file.read()
 
