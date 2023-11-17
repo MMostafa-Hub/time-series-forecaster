@@ -15,10 +15,16 @@ class ForecastSerializer(serializers.ModelSerializer):
         model = Forecast
         fields = ["dataset_id", "values"]
 
-    def validate_values(self, values):
-        pipeline = Dataset.objects.get(
-            dataset_id=self.initial_data["dataset_id"]
-        ).get_pipeline()
+    def validate(self, attrs):
+        values = attrs["values"]
+        self.__validate_values(values)
+
+        return attrs
+
+    def __validate_values(self, values):
+        dataset = Dataset.objects.get(dataset_id=self.initial_data["dataset_id"])
+
+        pipeline = dataset.get_pipeline()
 
         max_lag = max(pipeline["autocorrelation"].significant_lags)
         if len(values) < max_lag:

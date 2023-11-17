@@ -1,9 +1,11 @@
+from datetime import datetime
+import numpy as np
 from rest_framework.response import Response
 from .serializers import ForecastSerializer
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from rest_framework import status
-from .models import Pipeline, Dataset
+from .models import Dataset
 import pandas as pd
 from typing import List
 
@@ -17,13 +19,33 @@ class ForecastView(APIView):
 
         forecast_serializer.save()
 
-        # Load the preprocessing pipeline and the model
-        preprocessing_pipeline = Pipeline.objects.first().get_preprocessing_pipeline()
-        model = Dataset.objects.get(dataset_id=request.data["dataset_id"]).get_model()
+        dataset = Dataset.objects.get(dataset_id=request.data["dataset_id"])
 
-        # Convert the input data to a dataframe
-        input = self.__input_to_dataframe(request.data["values"])
-        return Response(status=status.HTTP_200_OK)
+        # Load the preprocessing pipeline and the model
+        model = dataset.get_model()
+        preprocessing_pipeline = dataset.get_pipeline()
+
+        # Transform the input to the format expected by the model
+        transformed_input = self.__get_test_input(request.data["values"], dataset)
+        pre_transformed_input = preprocessing_pipeline.transform(transformed_input)
+        input_to_model = (
+            pre_transformed_input.iloc[-1, :].drop("value").values.reshape(1, -1)
+        )
+
+        return JsonResponse(
+            {"prediction": model.predict(input_to_model)[0]}, status=status.HTTP_200_OK
+        )
+
+    def __get_test_input(self, values: List[dict], dataset: Dataset) -> pd.DataFrame:
+        transformed_input = self.__input_to_dataframe(values)
+
+        # add a new record with the last time index + interval
+        last_time_index = transformed_input.index[-1]
+        new_time_index = last_time_index + dataset.interval
+
+        transformed_input.loc[new_time_index] = np.nan
+
+        return transformed_input
 
     def __input_to_dataframe(self, values: List[dict]) -> pd.DataFrame:
         time_index_list = []
