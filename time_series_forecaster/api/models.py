@@ -2,6 +2,9 @@ from django.db import models
 import datetime
 import pickle
 
+import numpy as np
+from traitlets import default
+
 
 class Dataset(models.Model):
     dataset_id = models.CharField(
@@ -38,7 +41,7 @@ class Value(models.Model):
         Forecast, on_delete=models.CASCADE, related_name="values"
     )
     time = models.DateTimeField()
-    value = models.FloatField()
+    value = models.FloatField(default=np.nan, null=True, blank=True, name="value")
 
     def __str__(self):
         return f"Forecast: {self.forecast}, Time: {self.time}, Value: {self.value}"

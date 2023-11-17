@@ -5,7 +5,7 @@ from .serializers import ForecastSerializer
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from rest_framework import status
-from .models import Dataset
+from .models import Dataset, Forecast
 import pandas as pd
 from typing import List
 
@@ -26,7 +26,9 @@ class ForecastView(APIView):
         preprocessing_pipeline = dataset.get_pipeline()
 
         # Transform the input to the format expected by the model
-        transformed_input = self.__get_test_input(request.data["values"], dataset)
+        transformed_input = self.__get_test_input(
+            forecast_serializer.data["values"], dataset
+        )
         pre_transformed_input = preprocessing_pipeline.transform(transformed_input)
         input_to_model = (
             pre_transformed_input.iloc[-1, :].drop("value").values.reshape(1, -1)
