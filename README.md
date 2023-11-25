@@ -11,7 +11,7 @@
 2. run the docker image:
 
     ```bash
-    docker run -p 8000:8000 time-series-forecaster -d
+    docker run -d -p 8000:8000 time-series-forecaster
     ```
 
 ## Rest API
