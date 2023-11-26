@@ -16,6 +16,12 @@ COPY . .
 # Change directory to time_series_forecaster
 WORKDIR /app/time_series_forecaster
 
+# Run Make migrations
+RUN python manage.py makemigrations
+
+# Run Migrate
+RUN python manage.py migrate
+
 # Run the command to populate the dataset
 RUN python manage.py populatedataset
 
