@@ -10,20 +10,14 @@ class Command(BaseCommand):
     def __populate_dataset_model(self):
         datasets_paths = glob("../data/*.csv")
         datasets_names = [path.split("/")[-1].split(".")[0] for path in datasets_paths]
-
-        models_paths = glob("../notebooks/pipelines/models/*.pkl")
-        pipelines_paths = glob("../notebooks/pipelines/preprocessing/*.pkl")
-        self.stdout.write(
-            f"datasets: {len(datasets_names)}\nmodels: {len(models_paths)}\npipelines: {len(pipelines_paths)}"
-        )
         with open("../data/datasets_intervals.pkl", "rb") as file:
             intervals = pickle.load(file)
 
-        for dataset_name, model_path, pipeline_path in zip(
-            datasets_names, models_paths, pipelines_paths
-        ):
-            with open(model_path, "rb") as model_file, open(
-                pipeline_path, "rb"
+        for dataset_name in datasets_names:
+            with open(
+                f"../notebooks/pipelines/models/{dataset_name}.pkl", "rb"
+            ) as model_file, open(
+                f"../notebooks/pipelines/preprocessing/{dataset_name}.pkl", "rb"
             ) as pipeline_file:
                 dataset = Dataset(
                     dataset_id=dataset_name,
@@ -31,6 +25,7 @@ class Command(BaseCommand):
                     pipeline=pipeline_file.read(),
                     interval=intervals[dataset_name],
                 )
+                print(f"Saving dataset {dataset_name}")
             dataset.save()
 
     def handle(self, *args, **options):
