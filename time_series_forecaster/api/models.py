@@ -3,7 +3,6 @@ import datetime
 import pickle
 
 import numpy as np
-from traitlets import default
 
 
 class Dataset(models.Model):
