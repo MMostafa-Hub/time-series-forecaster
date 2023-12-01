@@ -43,10 +43,16 @@ class ForecastView(APIView):
             pre_transformed_input.iloc[-1, :].drop("value").values.reshape(1, -1)
         )
 
-        # Make the prediction, and return a JSON response
-        return JsonResponse(
-            {"prediction": model.predict(input_to_model)[0]}, status=status.HTTP_200_OK
-        )
+        # Create an inference json response
+        prediction = model.predict(input_to_model)[0]
+        timestamp = transformed_input.index[-1] + interval
+
+        response = {
+            "prediction": prediction,
+            "timestamp": timestamp,
+        }
+
+        return JsonResponse(response, status=status.HTTP_200_OK)
 
     def __get_test_input(
         self, values: List[dict], interval: pd.Timedelta
