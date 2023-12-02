@@ -32,7 +32,7 @@ mlflow server \
 
 ### Request
 
-The API accepts a GET request to `/forecast` with the following example parameters:
+The API accepts a GET request to `/api/forecast` with the following example parameters:
 
 ```json
 {
