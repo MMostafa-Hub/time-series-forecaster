@@ -36,29 +36,9 @@ The API accepts a GET request to `/api/forecast` with the following example para
 
 ```json
 {
-    "dataset_id": "train_9",
-    "values": [
-        {
-            "time": "2019-01-01T00:00:00Z",
-            "value": 1.0
-        },
-        {
-            "time": "2019-01-01T00:00:01Z",
-            "value": 2.0
-        },
-        {
-            "time": "2019-01-01T00:00:02Z",
-            "value": 3.0
-        },
-        {
-            "time": "2019-01-01T00:00:03Z",
-            "value": 2.0
-        },
-        {
-            "time": "2019-01-01T00:00:04Z",
-            "value": 3.0
-        }
-    ]
+    "dataset_id": "9",
+    "start_timestamp": "2021-11-11",
+    "test_dataset_path": "/home/mmostafa/time-series-forecaster/data/test/test_9.csv"
 }
 ```
 
