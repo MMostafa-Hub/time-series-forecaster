@@ -10,7 +10,7 @@ mlflow server \
     --default-artifact-root ./notebooks.mlruns 
 ```
 
-## Rest API
+## REST API
 
 1. install the requirements:
 
