@@ -1,22 +1,34 @@
 # Time Series Forecaster
 
-## Running the API
+## MLFlow Server
 
-1. build the docker image:
+Using this command to run the MLFlow Server:
 
-    ```bash
-    docker build -t time-series-forecaster .
-    ```
-
-2. run the docker image:
-
-    ```bash
-    docker run -d -p 8000:8000 time-series-forecaster
-    ```
+```bash
+mlflow server \
+    --backend-store-uri sqlite:///notebooks/mlflow.sqlite \
+    --default-artifact-root ./notebooks.mlruns 
+```
 
 ## Rest API
 
-After running the docker image, you can access the API at `http://localhost:8000`. or the port you specified in the `docker run` command.
+1. install the requirements:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+2. change the directory to `time_series_forecaster`:
+
+    ```bash
+    cd time_series_forecaster
+    ```
+
+3. run the API:
+
+    ```bash
+    python manage.py runserver 
+    ```
 
 ### Request
 
@@ -37,12 +49,22 @@ The API accepts a GET request to `/forecast` with the following example paramete
         {
             "time": "2019-01-01T00:00:02Z",
             "value": 3.0
+        },
+        {
+            "time": "2019-01-01T00:00:03Z",
+            "value": 2.0
+        },
+        {
+            "time": "2019-01-01T00:00:04Z",
+            "value": 3.0
         }
     ]
 }
 ```
 
-The Number of values for each dataset is specified in `/data/dataset_info.json`, when the number of values sent in the request is less than the number of values specified in the dataset info, Bad Response is returned, with a declaration of the number of values needed.
+The Number of values for each dataset is specified in `mlruns.sqlite`, which chan be accessed through the mlfow server.
+
+when the number of values sent in the request is less than the number of values specified in the dataset info, Bad Response is returned, with a declaration of the number of values needed.
 
 ### Response
 
@@ -50,6 +72,7 @@ The API returns a JSON response with the following format:
 
 ```json
 {
-   "prediction": "0.999"
+   "prediction": "0.999",
+   "timestamp": "2019-01-01T00:00:05Z"
 }
 ```
